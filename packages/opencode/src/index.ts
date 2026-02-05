@@ -79,11 +79,13 @@ const cli = yargs(hideBin(process.argv))
       args: process.argv.slice(2),
     })
 
-    const marker = path.join(Global.Path.data, "opencode.db")
-    if (!(await Bun.file(marker).exists())) {
-      console.log("Performing one time database migration, may take a few minutes...")
-      await JsonMigration.run(Database.Client().$client)
-      console.log("Database migration complete.")
+    if (opts._[0] !== "debug" && opts._[1] !== "config") {
+      const marker = path.join(Global.Path.data, "opencode.db")
+      if (!(await Bun.file(marker).exists())) {
+        console.log("Performing one time database migration, may take a few minutes...")
+        await JsonMigration.run(Database.Client().$client)
+        console.log("Database migration complete.")
+      }
     }
   })
   .usage("\n" + UI.logo())
